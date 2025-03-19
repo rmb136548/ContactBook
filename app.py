@@ -1,8 +1,11 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///contacts.db'
+
+# استفاده از DATABASE_URL در Render و SQLite در لوکال
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///contacts.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -43,6 +46,6 @@ def delete_contact(id):
 
 # اجرای برنامه
 if __name__ == '__main__':
-    with app.app_context():  # این خط مشکل را حل می‌کند
+    with app.app_context():
         db.create_all()
     app.run(debug=True)
